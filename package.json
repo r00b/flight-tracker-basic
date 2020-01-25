@@ -1,0 +1,14 @@
+{
+  "name": "flight-tracker",
+  "version": "1.0.0",
+  "description": "Simple server-side application for abstracting the FlightAware API.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Robert Steilberg",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
