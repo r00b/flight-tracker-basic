@@ -4,7 +4,7 @@ const TIMEOUT = 15000;
 
 module.exports = {
 
-  url: 'http://flightxml.flightaware.com/json/FlightXML2/',
+  url: 'https://flightxml.flightaware.com/json/FlightXML2/',
   username: 'rsteilberg',
   apiKey: '2b08f3fa6ae5e20afb32f41390b6122a5e13f563',
 
