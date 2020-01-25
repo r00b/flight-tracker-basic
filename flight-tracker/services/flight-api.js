@@ -54,10 +54,6 @@ module.exports = {
       this.res = response.data.SearchResult.aircraft;
     }).catch(error => {
       return error;
-    }).finally(() => {
-      this.queryCount++;
-      // TODO calculate cost of this run
-      console.log(`FlightAware API queried; total queries: ${this.queryCount}`);
     });
   }
 };
