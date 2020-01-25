@@ -13,7 +13,7 @@ module.exports = {
   res: [],
 
   init () {
-    console.log(`Starting flight worker with a delay of ${TIMEOUT/1000} seconds`);
+    console.log(`Starting flight worker with a delay of ${TIMEOUT / 1000} seconds`);
     this.start();
   },
 
@@ -52,6 +52,9 @@ module.exports = {
       }
     }).then(response => {
       this.res = response.data.SearchResult.aircraft;
+      this.queryCount++;
+      // TODO calculate cost of this run
+      console.log(`FlightAware API queried; total queries: ${this.queryCount}`);
     }).catch(error => {
       return error;
     });
