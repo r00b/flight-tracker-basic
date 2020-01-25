@@ -19,9 +19,15 @@ module.exports = {
 
   start () {
     this.queryApi();
-    setTimeout(() => {
-      this.start();
+    this.timer = setTimeout(() => {
+      if (this.queryCount < 25) {
+        this.start();
+      }
     }, TIMEOUT);
+  },
+
+  kill () {
+    clearTimeout(this.timer);
   },
 
   query (q) {
