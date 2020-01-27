@@ -8,7 +8,10 @@ var indexRouter = require('./routes/index');
 
 var flightApi = require('./services/flight-api');
 // start the api worker
-// flightApi.init();
+flightApi.init();
+
+const dotenv = require('dotenv');
+dotenv.config();
 
 var app = express();
 

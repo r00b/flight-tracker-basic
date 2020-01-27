@@ -5,12 +5,10 @@ const TIMEOUT = 15000;
 module.exports = {
 
   url: 'https://flightxml.flightaware.com/json/FlightXML2/',
-  username: 'rsteilberg',
-  apiKey: '2b08f3fa6ae5e20afb32f41390b6122a5e13f563',
 
   queryCount: 0,
 
-  res: [ 'foo' ],
+  res: [ 'no results yet!' ],
 
   init () {
     console.log(`Starting flight worker with a delay of ${TIMEOUT / 1000} seconds`);
@@ -44,8 +42,8 @@ module.exports = {
   queryApi () {
     axios.get(`${this.url}Search`, {
       auth: {
-        username: this.username,
-        password: this.apiKey
+        username: process.env.FLIGHTAWARE_USERNAME,
+        password: process.env.FLIGHTAWARE_APIKEY
       },
       params: {
         query: '-belowAltitude 100 -latlong "38.76329 -77.19891 38.98460 -76.874127"'
