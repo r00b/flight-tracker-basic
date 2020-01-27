@@ -10,7 +10,7 @@ module.exports = {
 
   queryCount: 0,
 
-  res: [],
+  res: [ 'foo' ],
 
   init () {
     console.log(`Starting flight worker with a delay of ${TIMEOUT / 1000} seconds`);

@@ -8,7 +8,7 @@ var indexRouter = require('./routes/index');
 
 var flightApi = require('./services/flight-api');
 // start the api worker
-flightApi.init();
+// flightApi.init();
 
 var app = express();
 
