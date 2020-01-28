@@ -1,3 +1,5 @@
+import stubs from './stubs';
+
 const axios = require('axios');
 
 const TIMEOUT = 1; // in seconds
@@ -59,11 +61,7 @@ module.exports = {
       });
     } else {
       result = await new Promise((resolve, reject) => {
-        return resolve({
-          data: {
-            AirportBoardsResult: `${airport} (this is a stub)`
-          }
-        });
+        return resolve(stubs.AirportBoards);
       });
     }
     this.queryCount++;
