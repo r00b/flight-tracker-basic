@@ -4,7 +4,7 @@ const axios = require('axios');
 
 const TIMEOUT = 1; // in seconds
 const QUERY_CEIL = 1; // max queries allowed per session
-const STUB_API = true; // should we stub the actual API call to save $$$
+const STUB_API = process.env.STUB; // should we stub the actual API call to save $$$
 const AIRPORT = 'DCA';
 
 module.exports = {
@@ -65,7 +65,7 @@ module.exports = {
       });
     }
     this.queryCount++;
-    console.log(`FlightAware API ${STUB_API ? '*STUB*' : ''} queried; total queries: ${this.queryCount}`);
+    console.log(`FlightAware API${STUB_API ? ' *STUB* ' : ' '}queried; total queries: ${this.queryCount}`);
     this.currBoard = result.data.AirportBoardsResult || {};
   },
 
