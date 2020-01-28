@@ -6,10 +6,6 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 
-var flightApi = require('./services/flight-api');
-// start the api worker
-flightApi.init();
-
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -20,6 +16,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// start the api worker
+var flightApi = require('./services/flight-api');
+flightApi.init();
 
 app.use('/dca', indexRouter);
 

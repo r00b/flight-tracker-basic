@@ -1,60 +1,77 @@
 const axios = require('axios');
 
-const TIMEOUT = 15000;
+const TIMEOUT = 1; // in seconds
+const QUERY_CEIL = 1; // max queries allowed per session
+const STUB_API = true; // should we stub the actual API call to save $$$
+const AIRPORT = 'DCA';
 
 module.exports = {
 
-  url: 'https://flightxml.flightaware.com/json/FlightXML2/',
-
   queryCount: 0,
-
-  res: [ 'no results yet!' ],
+  currBoard: {},
 
   init () {
-    console.log(`Starting flight worker with a delay of ${TIMEOUT / 1000} seconds`);
-    this.start();
+    this.id = Math.floor(Math.random() * 1000000);
+    console.log(`Starting flight API worker ${this.id} with a delay of ${TIMEOUT} seconds`);
+    this.queryInterval();
   },
 
-  start () {
-    this.queryApi();
-    this.timer = setTimeout(() => {
-      if (this.queryCount < 25) {
-        this.start();
-      }
-    }, TIMEOUT);
-  },
-
-  kill () {
+  /**
+   * Kill the worker
+   */
+  stop () {
+    console.log(`Stopping flight API worker ${this.id}`);
     clearTimeout(this.timer);
   },
 
-  query (q) {
-    let res = this.res;
-    if (q.origin) {
-      res = res.filter(flight => flight.origin === q.origin);
-    }
-    if (q.destination) {
-      res = res.filter(flight => flight.destination === q.destination);
-    }
-    return res;
+  /**
+   * Set a recurring timer that will query the API every TIMEOUT seconds
+   */
+  queryInterval () {
+    this.getAirportBoard(AIRPORT).catch(e => {
+      throw new Error(`Error: ${e}`);
+    });
+    this.timer = setTimeout(() => {
+      if (this.queryCount < QUERY_CEIL) {
+        this.queryInterval();
+      }
+    }, TIMEOUT * 1000);
   },
 
-  queryApi () {
-    axios.get(`${this.url}Search`, {
-      auth: {
-        username: process.env.FLIGHTAWARE_USERNAME,
-        password: process.env.FLIGHTAWARE_APIKEY
-      },
-      params: {
-        query: '-belowAltitude 100 -latlong "38.76329 -77.19891 38.98460 -76.874127"'
-      }
-    }).then(response => {
-      this.res = response.data.SearchResult.aircraft;
-      this.queryCount++;
-      // TODO calculate cost of this run
-      console.log(`FlightAware API queried; total queries: ${this.queryCount}`);
-    }).catch(error => {
-      return error;
-    });
-  }
+  /**
+   * Query the raw data from the FlightAware API; perform no transformations
+   */
+  async getAirportBoard (airport) {
+    if (typeof airport !== 'string') {
+      throw new Error(`Airport code ${airport} must be a string`);
+    }
+    // TODO add check to ensure that env vars are defined
+    let result;
+    if (!STUB_API) {
+      result = await axios.get(`${process.env.V3_URL}AirportBoards`, {
+        auth: {
+          username: process.env.FA_USERNAME,
+          password: process.env.V3_API
+        },
+        params: {
+          airport_code: airport
+        }
+      });
+    } else {
+      result = await new Promise((resolve, reject) => {
+        return resolve({
+          data: {
+            AirportBoardsResult: `${airport} (this is a stub)`
+          }
+        });
+      });
+    }
+    this.queryCount++;
+    console.log(`FlightAware API ${STUB_API ? '*STUB*' : ''} queried; total queries: ${this.queryCount}`);
+    this.currBoard = result.data.AirportBoardsResult || {};
+  },
+
+  queryAirportBoard () {
+    return this.currBoard;
+  },
 };
