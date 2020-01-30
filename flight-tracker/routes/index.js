@@ -4,7 +4,7 @@ var flightApi = require('./../services/flight-api');
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-  res.json(flightApi.queryAirportBoard());
+  res.json(flightApi.getClosestFlight());
 });
 
 module.exports = router;
